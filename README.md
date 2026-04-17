@@ -21,7 +21,7 @@ Este repositorio contiene la investigación y documentación técnica correspond
 ---
 
 ## 1. Anatomía de Syslog y Clasificación
-Syslog es el estándar en sistemas Linux para la gestión y clasificación de eventos de registro. [cite_start]El sistema organiza cada mensaje mediante un valor numérico de **prioridad (PRI)**, el cual se obtiene cruzando la **Facilidad** (el origen del mensaje) y la **Severidad**[cite: 16, 17].
+Syslog es el estándar en sistemas Linux para la gestión y clasificación de eventos de registro. [cite_start]El sistema organiza cada mensaje mediante un valor numérico de **prioridad (PRI)**, el cual se obtiene cruzando la **Facilidad** (el origen del mensaje) y la **Severidad**.
 
 De acuerdo con el estándar, la severidad se clasifica en 8 niveles críticos:
 
@@ -41,13 +41,13 @@ De acuerdo con el estándar, la severidad se clasifica en 8 niveles críticos:
 ## 2. Seguridad en el Registro de Autenticación
 La configuración de permisos en el archivo `/var/log/auth.log` es un pilar crítico de la seguridad. Se considera una **negligencia grave** permitir permisos de lectura a usuarios no privilegiados debido a:
 
-* [cite_start]**Exposición de Información Sensible:** El archivo contiene nombres de usuarios válidos, intentos de inicio de sesión, direcciones IP y actividad detallada del comando `sudo`[cite: 28].
+* **Exposición de Información Sensible:** El archivo contiene nombres de usuarios válidos, intentos de inicio de sesión, direcciones IP y actividad detallada del comando `sudo`.
 * **Enumeración de Usuarios:** Un atacante local podría identificar qué cuentas existen en el sistema para dirigir ataques de fuerza bruta dirigidos.
 
 ---
 
 ## 3. Diferenciación de Intentos de Acceso (SSH vs Local)
-[cite_start]Es fundamental distinguir el origen de un fallo de autenticación para determinar si la amenaza es externa o física[cite: 30, 31]:
+Es fundamental distinguir el origen de un fallo de autenticación para determinar si la amenaza es externa o física:
 
 ### A. Conexión Remota (SSH)
 * **Proceso:** Identificado bajo el demonio `sshd`. Cada conexión genera un subproceso con un **PID único**.
@@ -65,11 +65,11 @@ La configuración de permisos en el archivo `/var/log/auth.log` es un pilar crí
 [cite_start]La gestión centralizada transforma los registros de simples archivos de texto en **evidencia digital íntegra**[cite: 33].
 
 ### Ventajas de Seguridad
-* [cite_start]**Custodia Externa:** Al enviar logs en tiempo real a un servidor externo, un atacante que comprometa la máquina local pierde el control sobre la evidencia, impidiendo que borre sus huellas[cite: 35].
-* [cite_start]**Correlación de Eventos:** Facilita la detección de ataques distribuidos; si múltiples servidores reportan fallos desde una misma IP simultáneamente, se dispara una alerta global[cite: 36].
+* **Custodia Externa:** Al enviar logs en tiempo real a un servidor externo, un atacante que comprometa la máquina local pierde el control sobre la evidencia, impidiendo que borre sus huellas.
+* **Correlación de Eventos:** Facilita la detección de ataques distribuidos; si múltiples servidores reportan fallos desde una misma IP simultáneamente, se dispara una alerta global.
 
 ### Cumplimiento Legal (RGPD)
-[cite_start]El Reglamento General de Protección de Datos (RGPD) exige a las empresas demostrar la trazabilidad de los datos personales (quién accedió, cuándo y desde dónde)[cite: 38]. La centralización de logs asegura que estos registros sean inalterables y estén disponibles para auditorías legales en cumplimiento con la normativa española vigente.
+El Reglamento General de Protección de Datos (RGPD) exige a las empresas demostrar la trazabilidad de los datos personales (quién accedió, cuándo y desde dónde). La centralización de logs asegura que estos registros sean inalterables y estén disponibles para auditorías legales en cumplimiento con la normativa española vigente.
 
 ---
 
