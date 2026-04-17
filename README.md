@@ -62,7 +62,7 @@ Es fundamental distinguir el origen de un fallo de autenticación para determina
 ---
 
 ## 4. Log Management y Cumplimiento Legal (RGPD)
-[cite_start]La gestión centralizada transforma los registros de simples archivos de texto en **evidencia digital íntegra**[cite: 33].
+La gestión centralizada transforma los registros de simples archivos de texto en **evidencia digital íntegra**.
 
 ### Ventajas de Seguridad
 * **Custodia Externa:** Al enviar logs en tiempo real a un servidor externo, un atacante que comprometa la máquina local pierde el control sobre la evidencia, impidiendo que borre sus huellas.
