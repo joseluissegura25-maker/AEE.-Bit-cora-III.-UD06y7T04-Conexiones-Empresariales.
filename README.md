@@ -1,31 +1,78 @@
 # AEE.-Bit-cora-III.-UD06y7T04-Conexiones-Empresariales.
-Misión 1: Reto de investigación
-Anatomia de Syslog y clasificación
-Syslog es el sistema estándar en Linux para gestionar y clasificar eventos de registro (logs). Organiza cada mensaje utilizando un valor numérico de prioridad (PRI) calculado al cruzar la Facilidad, que significa que parte del sistema es generado por el log
 
-El estándar de la prioridad antes mencionada se define en 8 niveles:
+# Operación Escudo: Fundamentos de Seguridad y Auditoría
 
-0-Emergency: El sistema no se puede usar
-1-Alert: Se necesita accion inmediata del usuario
-2-Critical: Condiciones críticas
-3-Error: Condiciones de error
-4-Warning: Son las advertencias
-5-Notice: Algo normal pero significativo
-6-Informational: Mensajes meramente informativos
-7-Debug: Mensajes de depuracion
-¿Por qué es una negligencia grave que el archivo /var/log/auth.log tenga permisos de lectura para usuarios no privilegiados?
-Es una negligencia grave porque expone información sensible sobre la seguridad del sistema, incluyendo nombres de usuario, intentos de inicio de sesión fallidos, direcciones IP y actividad de sudo.
-¿Qué información específica (como PIDs, nombres de usuario o direcciones IP) diferencia un intento fallido de conexión remota SSH de un simple fallo de contraseña de un usuario local frente a la pantalla?
-La diferencia es que primero cada conexión entrante en SSH genera un subproceso con un PID único y que en local se verán procesos como login o gdm o lightdm si es entorno gráfico. En SSH siempre aparece la IP de origen y puerto desde el que se intenta la conexión  algo como “from 192.168.1.45 port 54321 ssh2 y en local como no hay direccion ip aparece el identificador de la TTY o terminal física (on tty1 o on /dev/tty2
+Este repositorio contiene la investigación y documentación técnica correspondiente a la **Fase de Investigación: Comprendiendo el corazón del sistema**, desarrollada para la asignatura de Sistemas Informáticos.
 
+**Estudiante:** José Luis Segura Fernández  
+**Asignatura:** Sistemas Informáticos  
+**Profesor:** Willman Acosta  
+**Fecha:** 17 de abril de 2026
 
+---
 
-Log Management, Seguridad y Cumplimiento Legal
-	
-La gestión centralizada de los registros resumidamente transforma los logs de simples archivos de texto en evidencia digital íntegra.
-Ventajas de Seguridad
-Custodia Externa: Al enviar logs en tiempo real a un servidor externo seguro, el atacante pierde el control sobre la evidencia. 
-Correlación de Eventos: Permite detectar ataques distribuidos. Si diez servidores distintos reportan fallos de autenticación desde la misma IP externa al mismo tiempo, el sistema centralizado disparará una alerta global que un servidor aislado nunca detectará
-Cumplimiento Legal (RGPD)
-Este es el reglamento general de protección de datos, exige que las empresas demuestren quién, cuándo y desde donde se accedió a datos personales.
-	
+## 📋 Índice
+1. [Anatomía de Syslog y Clasificación](#1-anatomía-de-syslog-y-clasificación)
+2. [Seguridad en el Registro de Autenticación](#2-seguridad-en-el-registro-de-autenticación)
+3. [Diferenciación de Intentos de Acceso (SSH vs Local)](#3-diferenciación-de-intentos-de-acceso-ssh-vs-local)
+4. [Log Management y Cumplimiento Legal (RGPD)](#4-log-management-y-cumplimiento-legal-rgpd)
+5. [Referencias](#5-referencias)
+
+---
+
+## 1. Anatomía de Syslog y Clasificación
+Syslog es el estándar en sistemas Linux para la gestión y clasificación de eventos de registro. [cite_start]El sistema organiza cada mensaje mediante un valor numérico de **prioridad (PRI)**, el cual se obtiene cruzando la **Facilidad** (el origen del mensaje) y la **Severidad**[cite: 16, 17].
+
+De acuerdo con el estándar, la severidad se clasifica en 8 niveles críticos:
+
+| Nivel | Severidad | Descripción |
+| :---: | :--- | :--- |
+| **0** | Emergency | El sistema no se puede usar. |
+| **1** | Alert | Se necesita acción inmediata del usuario. |
+| **2** | Critical | Condiciones críticas del sistema. |
+| **3** | Error | Condiciones de error en procesos. |
+| **4** | Warning | Advertencias preventivas. |
+| **5** | Notice | Evento normal pero significativo. |
+| **6** | Informational | Mensajes meramente informativos. |
+| **7** | Debug | Mensajes detallados para depuración. |
+
+---
+
+## 2. Seguridad en el Registro de Autenticación
+La configuración de permisos en el archivo `/var/log/auth.log` es un pilar crítico de la seguridad. Se considera una **negligencia grave** permitir permisos de lectura a usuarios no privilegiados debido a:
+
+* [cite_start]**Exposición de Información Sensible:** El archivo contiene nombres de usuarios válidos, intentos de inicio de sesión, direcciones IP y actividad detallada del comando `sudo`[cite: 28].
+* **Enumeración de Usuarios:** Un atacante local podría identificar qué cuentas existen en el sistema para dirigir ataques de fuerza bruta dirigidos.
+
+---
+
+## 3. Diferenciación de Intentos de Acceso (SSH vs Local)
+[cite_start]Es fundamental distinguir el origen de un fallo de autenticación para determinar si la amenaza es externa o física[cite: 30, 31]:
+
+### A. Conexión Remota (SSH)
+* **Proceso:** Identificado bajo el demonio `sshd`. Cada conexión genera un subproceso con un **PID único**.
+* **Identificador de Red:** Siempre incluye la **IP de origen** y el puerto remoto. 
+* *Ejemplo de log:* `from 192.168.1.45 port 54321 ssh2`.
+
+### B. Acceso Local
+* **Proceso:** Identificado por procesos de sistema como `login`, o gestores de entorno gráfico como `gdm` o `lightdm`.
+* **Identificador Físico:** Al no existir una dirección IP, el registro muestra el identificador de la **TTY** o terminal física.
+* *Ejemplo de log:* `on tty1` o `on /dev/tty2`.
+
+---
+
+## 4. Log Management y Cumplimiento Legal (RGPD)
+[cite_start]La gestión centralizada transforma los registros de simples archivos de texto en **evidencia digital íntegra**[cite: 33].
+
+### Ventajas de Seguridad
+* [cite_start]**Custodia Externa:** Al enviar logs en tiempo real a un servidor externo, un atacante que comprometa la máquina local pierde el control sobre la evidencia, impidiendo que borre sus huellas[cite: 35].
+* [cite_start]**Correlación de Eventos:** Facilita la detección de ataques distribuidos; si múltiples servidores reportan fallos desde una misma IP simultáneamente, se dispara una alerta global[cite: 36].
+
+### Cumplimiento Legal (RGPD)
+[cite_start]El Reglamento General de Protección de Datos (RGPD) exige a las empresas demostrar la trazabilidad de los datos personales (quién accedió, cuándo y desde dónde)[cite: 38]. La centralización de logs asegura que estos registros sean inalterables y estén disponibles para auditorías legales en cumplimiento con la normativa española vigente.
+
+---
+
+## 5. Referencias
+* [1] J. L. Segura Fernández, *Bitácora III. Conexiones Empresariales: Taller Técnico Operación Escudo*, Sevilla, 2026[cite: 1, 2, 5].
+* [2] R. Gerardi, *Hands-on System Programming con Go*, Packt Publishing, 2019 (Ref. conceptual sobre estándares Syslog y RFC 5424).
